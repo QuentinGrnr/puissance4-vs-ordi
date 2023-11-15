@@ -13,6 +13,6 @@ public :
     int jeuHumain(int & bestMove, int niveau); // symétrique de jeuOrdi permettant à l'ordinateur de si
     int vertical(int joueur, int j); // permet d’évaluer le coup joué par “joueur” verticallement (1 : ordinateur, -1 : humain) sur la colonne j du plateau
     int horizontal(int joueur, int j); // permet d’évaluer le coup joué par “joueur” horizontalement (1 : ordinateur, -1 : humain) sur la colonne j du plateau
-    int diagonaldroite(int joueur, int j); // permet d’évaluer le coup joué par “joueur” diagonalement vers la droite(1 : ordinateur, -1 : humain) sur la colonne j du plateau
+    int diagonaledroite(int joueur, int j); // permet d’évaluer le coup joué par “joueur” diagonalement vers la droite(1 : ordinateur, -1 : humain) sur la colonne j du plateau
     int diagonalegauche(int joueur, int j); // permet d’évaluer le coup joué par “joueur” diagonalement vers la gauche(1 : ordinateur, -1 : humain) sur la colonne j du plateau
 };
