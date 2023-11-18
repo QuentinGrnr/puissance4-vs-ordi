@@ -15,4 +15,6 @@ public :
     int horizontal(int joueur, int j); // permet d’évaluer le coup joué par “joueur” horizontalement (1 : ordinateur, -1 : humain) sur la colonne j du plateau
     int diagonaledroite(int joueur, int j); // permet d’évaluer le coup joué par “joueur” diagonalement vers la droite(1 : ordinateur, -1 : humain) sur la colonne j du plateau
     int diagonalegauche(int joueur, int j); // permet d’évaluer le coup joué par “joueur” diagonalement vers la gauche(1 : ordinateur, -1 : humain) sur la colonne j du plateau
+    bool plein(); // permet de savoir si le plateau est plein
+    bool coupgagnant(int joueur, int j); // permet de savoir si le coup joué par “joueur” (1 : ordinateur, -1 : humain) sur la colonne j du plateau est gagnant
 };
