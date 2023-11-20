@@ -10,7 +10,7 @@ int main()
     srand(time(0));
     int piece = rand() % 2;
 
-    Puissance4 p(3);
+    Puissance4 p(2);
     int jeu = 0; // 0 : la partie continue ; 1 : l'ordinateur a gagné ; -1 : l'humain a gagné ; 2 : match nul
     
     while (jeu ==0){
@@ -21,7 +21,7 @@ int main()
                 jeu = 2;
             } else {
                 int bestMove = 0;
-                p.jeuOrdi(bestMove, 3);
+                p.jeuOrdi(bestMove, 1);
                 if (p.coupgagnant(1, bestMove)){
                     jeu = 1;
                 }
@@ -43,17 +43,11 @@ int main()
                 cout << "Entrez le numero de la colonne que vous voulez jouer : ";
                 int move;
                 cin >> move;
-                while (!p.jouer(move, -1))
-                {
-                    cout << "Entrez un numero de colonne valide : ";
-                    cin >> move;
-                }
-                p.dejouer(move);
                 if (p.coupgagnant(-1, move))
                 {
                     jeu = -1;
                 }
-                p.jouer(move, -1);
+                cout << p.jouer(move, -1) << "////////////////" << endl;
                 p.affichage();
                 piece = 0; // Passe au tour de l'ordinateur
             }

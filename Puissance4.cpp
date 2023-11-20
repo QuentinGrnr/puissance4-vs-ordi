@@ -40,21 +40,27 @@ void Puissance4::affichage()
 
 bool Puissance4::jouer(int j, int joueur)
 {
-    if (Col[j] == 5|| j < 0 || j > 6) return false;
+    if (Col[j] == 5 || j < 0 || j > 6) return false; 
     Col[j]++;
-    this->T[Col[j]][j] = joueur;   
+    this->T[Col[j]][j] = joueur;  
     return true; 
 }
 
 void Puissance4::dejouer(int j)
 {
-    if (Col[j] == -1 || j < 0 || j > 7) return;
+    if (Col[j] == -1 || j < 0 || j > 6) return;
     this->T[Col[j]][j] = 0;
     Col[j]--;
 }
 
 int Puissance4::evaluation(int joueur, int j)
 {
+    /*cout << "vertical : " << vertical(joueur, j) << endl;
+    cout << "horizontal : " << horizontal(joueur, j) << endl;
+    cout << "diagonaledroite : " << diagonaledroite(joueur, j) << endl;
+    cout << "diagonalegauche : " << diagonalegauche(joueur, j) << endl;
+    cout << "somme : " << vertical(joueur, j) + horizontal(joueur, j) + diagonaledroite(joueur, j) + diagonalegauche(joueur, j) << endl;
+    cout << "-------------------------------------" << endl;*/
     int somme = vertical(joueur, j) + horizontal(joueur, j) + diagonaledroite(joueur, j) + diagonalegauche(joueur, j);
     if (joueur == 1) {
         return somme;
@@ -79,7 +85,6 @@ int Puissance4::evaluation(int joueur, int j)
 
 int Puissance4::vertical(int joueur, int j)
 {
-    jouer (j, joueur);
     int sum = 0;
     int nb_joueur = 0; //nombre de pions du joueur sur la verticale a la suite
     for (int i = 5; i >= 0; i--){ // on parcours la colonne de bas en haut
@@ -92,18 +97,15 @@ int Puissance4::vertical(int joueur, int j)
         } else if (T[i][j] == 0) {
             sum++;
         }
-        if (nb_joueur == 4) {
-            dejouer(j);
+        if (nb_joueur >= 4) {
             return 1000; // si le joueur a 4 pions a la suite on retourne 1000 car il gagne
         }
     }
-    dejouer(j);
     return sum;
 }
 
 int Puissance4::horizontal(int joueur, int j)
 {
-    jouer (j, joueur);
     int sum = 0;
     int nb_joueur = 0; //nombre de pions du joueur a l'horizontale a la suite
     // on parcours a droite puis a gauche du piont pour calculer la somme sur la ligne
@@ -127,26 +129,28 @@ int Puissance4::horizontal(int joueur, int j)
     }
 
     // on verifie si grace au coup, le joueur gagne
-    for (int i = 0; i < 7; i++){
+    for (int i = j; i < 7; i++){
        if (T[Col[j]][i] == joueur) {
         nb_joueur++;
-        } else if (T[Col[j]][i] == -joueur) {
-            nb_joueur=0;
-        } else if (T[Col[j]][i] == 0) {
-            nb_joueur=0;
+        } else if (T[Col[j]][i] == -joueur || T[Col[j]][i] == 0) {
+            break;
         }
     }
-    if (nb_joueur == 4) {
-            dejouer(j);
+    for (int i = j-1; i >= 0; i--){
+       if (T[Col[j]][i] == joueur) {
+        nb_joueur++;
+        } else if (T[Col[j]][i] == -joueur || T[Col[j]][i] == 0) {
+            break;
+        }
+    }
+    if (nb_joueur >= 4) {
             return 1000; // si le joueur a 4 pions a la suite on retourne 1000 car il gagne
         }
-    dejouer(j);
     return sum;
 }
 
 int Puissance4::diagonaledroite(int joueur, int j)
 {
-    jouer (j, joueur);
     int sum = 0;
     int nb_joueur = 0; //nombre de pions du joueur a l'horizontale a la suite
     // on parcours a droite puis a gauche du piont pour calculer la somme sur la ligne
@@ -204,16 +208,13 @@ int Puissance4::diagonaledroite(int joueur, int j)
     }
 
     if (nb_joueur == 4) {
-            dejouer(j);
             return 1000; // si le joueur a 4 pions a la suite on retourne 1000 car il gagne
         }
-    dejouer(j);
     return sum;
 }
 
 int Puissance4::diagonalegauche(int joueur, int j)
 {
-    jouer (j, joueur);
     int sum = 0;
     int nb_joueur = 0; //nombre de pions du joueur a l'horizontale a la suite
     // on parcours a droite puis a gauche du piont pour calculer la somme sur la ligne
@@ -271,36 +272,41 @@ int Puissance4::diagonalegauche(int joueur, int j)
     }
 
     if (nb_joueur == 4) {
-            dejouer(j);
             return 1000; // si le joueur a 4 pions a la suite on retourne 1000 car il gagne
         }
-    dejouer(j);
     return sum;
 }
 
 int Puissance4::jeuOrdi(int & bestMove, int niveau)
 {
+    int arg = 0;
     int joueur = 1;
     if (plein()) return 0;
-    if (evaluation(joueur, bestMove) >= 1000) {
+    if (coupgagnant(joueur,bestMove)) {
         return 1000;
     }
     if (niveau == this->hmax){
         int S=0;
         for (int i = 0; i < 7; i++){
+            jouer(i, joueur);
             S += evaluation(joueur, i);
+            dejouer(i);
         }
         return S;
     }
     int val = -1000;
     int res;
-    int arg;
     for (int i = 0; i < 7; i++){
-        if (!plein())
-        res = jeuHumain(arg, niveau+1);
-        if (res > val){
-            val = res;
-            bestMove = i;
+        if (!plein()){
+            jouer(i, joueur);
+            res = jeuHumain(arg, niveau+1);
+            /*affichage();
+            cout << "res collone " << i << " : " << res << endl;*/
+            dejouer(i);
+            if (res > val){
+                val = res;
+                bestMove = i;
+            }
         }
     }
     return val;
@@ -308,6 +314,7 @@ int Puissance4::jeuOrdi(int & bestMove, int niveau)
 
 int Puissance4::jeuHumain(int & bestMove, int niveau)
 {
+
     int joueur = -1;
     if (plein()) return 0;
     if (evaluation(joueur, bestMove) <= -1000) {
@@ -316,19 +323,26 @@ int Puissance4::jeuHumain(int & bestMove, int niveau)
     if (niveau == this->hmax){
         int S=0;
         for (int i = 0; i < 7; i++){
+            jouer(i, joueur);
             S += evaluation(joueur, i);
+            dejouer(i);
         }
         return S;
     }
     int val = 1000;
     int res;
-    int arg;
+    int arg = 0;
     for (int i = 0; i < 7; i++){
-        if (!plein())
-        res = jeuOrdi(arg, niveau+1);
-        if (res < val){
-            val = res;
-            bestMove = i;
+        if (!plein()){
+            jouer(i, joueur);
+            res = jeuOrdi(arg, niveau+1);
+        /*affichage();
+            cout << "res collone " << i << " : " << res << endl;*/
+            dejouer(i);
+            if (res < val){
+                val = res;
+                bestMove = i;
+            }
         }
     }
     return val;
@@ -343,6 +357,19 @@ bool Puissance4::plein()
 
 bool Puissance4::coupgagnant(int joueur, int j)
 {
-    if (vertical(joueur, j) == 1000 || horizontal(joueur, j) == 1000 || diagonaledroite(joueur, j) == 1000 || diagonalegauche(joueur, j) == 1000) return true;
+    if (Col[j] == 5) return false;
+    jouer(j, joueur);
+    if (joueur == 1 && evaluation(joueur, j) >= 1000) {
+        cout << "evaluation : " << evaluation(joueur, j) << endl;
+        dejouer(j);
+        return true;
+    }
+    else if (joueur == -1 && evaluation(joueur, j) <= -1000) {
+        cout << "evaluation : " << evaluation(joueur, j) << endl;
+        dejouer(j);
+        return true;
+    
+    }
+    dejouer(j);
     return false;
 }
