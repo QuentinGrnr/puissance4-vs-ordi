@@ -17,11 +17,9 @@ void Puissance4::affichage()
     cout << "ordinateur : X humain : O" << endl << endl;
 
     cout << "    ";
-    for (int i = 0; i < 7; i++)
-        cout << i << " ";
+    for (int i = 0; i < 7; i++) cout << i << " ";
         cout << endl << "   -";
-    for (int i = 0; i < 7; i++)
-        cout << "--";    
+    for (int i = 0; i < 7; i++) cout << "--";    
         cout << endl;
     for (int i = 5; i >= 0; i--)
     {
