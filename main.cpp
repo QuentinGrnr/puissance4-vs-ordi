@@ -10,7 +10,7 @@ int main()
     srand(time(0));
     int piece = rand() % 2;
 
-    Puissance4 p(2);
+    Puissance4 p(9);
     int jeu = 0; // 0 : la partie continue ; 1 : l'ordinateur a gagné ; -1 : l'humain a gagné ; 2 : match nul
     
     while (jeu ==0){
@@ -47,7 +47,7 @@ int main()
                 {
                     jeu = -1;
                 }
-                cout << p.jouer(move, -1) << "////////////////" << endl;
+                p.jouer(move, -1);
                 p.affichage();
                 piece = 0; // Passe au tour de l'ordinateur
             }

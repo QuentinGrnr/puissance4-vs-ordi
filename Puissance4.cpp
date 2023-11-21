@@ -288,9 +288,10 @@ int Puissance4::jeuOrdi(int & bestMove, int niveau)
     if (niveau == this->hmax){
         int S=0;
         for (int i = 0; i < 7; i++){
-            jouer(i, joueur);
-            S += evaluation(joueur, i);
-            dejouer(i);
+            if (jouer(i, joueur)){
+                S += evaluation(joueur, i);
+                dejouer(i);
+            }
         }
         return S;
     }
@@ -298,14 +299,15 @@ int Puissance4::jeuOrdi(int & bestMove, int niveau)
     int res;
     for (int i = 0; i < 7; i++){
         if (!plein()){
-            jouer(i, joueur);
-            res = jeuHumain(arg, niveau+1);
-            /*affichage();
-            cout << "res collone " << i << " : " << res << endl;*/
-            dejouer(i);
-            if (res > val){
-                val = res;
-                bestMove = i;
+            if (jouer(i, joueur)){
+                res = jeuHumain(arg, niveau+1);
+                /*affichage();
+                cout << "res collone " << i << " : " << res << endl;*/
+                dejouer(i);
+                if (res > val){
+                    val = res;
+                    bestMove = i;
+                }
             }
         }
     }
@@ -323,9 +325,10 @@ int Puissance4::jeuHumain(int & bestMove, int niveau)
     if (niveau == this->hmax){
         int S=0;
         for (int i = 0; i < 7; i++){
-            jouer(i, joueur);
-            S += evaluation(joueur, i);
-            dejouer(i);
+            if (jouer(i, joueur)){
+                S += evaluation(joueur, i);
+                dejouer(i);
+            }
         }
         return S;
     }
@@ -334,14 +337,15 @@ int Puissance4::jeuHumain(int & bestMove, int niveau)
     int arg = 0;
     for (int i = 0; i < 7; i++){
         if (!plein()){
-            jouer(i, joueur);
-            res = jeuOrdi(arg, niveau+1);
-        /*affichage();
-            cout << "res collone " << i << " : " << res << endl;*/
-            dejouer(i);
-            if (res < val){
-                val = res;
-                bestMove = i;
+            if(jouer(i, joueur)){
+                res = jeuOrdi(arg, niveau+1);
+                /*affichage();
+                cout << "res collone " << i << " : " << res << endl;*/
+                dejouer(i);
+                if (res < val){
+                    val = res;
+                    bestMove = i;
+                }
             }
         }
     }
@@ -358,18 +362,20 @@ bool Puissance4::plein()
 bool Puissance4::coupgagnant(int joueur, int j)
 {
     if (Col[j] == 5) return false;
-    jouer(j, joueur);
-    if (joueur == 1 && evaluation(joueur, j) >= 1000) {
-        cout << "evaluation : " << evaluation(joueur, j) << endl;
+    
+    if (jouer(j, joueur)){
+        if (joueur == 1 && evaluation(joueur, j) >= 1000) {
+        //cout << "evaluation : " << evaluation(joueur, j) << endl;
         dejouer(j);
         return true;
     }
     else if (joueur == -1 && evaluation(joueur, j) <= -1000) {
-        cout << "evaluation : " << evaluation(joueur, j) << endl;
+        //cout << "evaluation : " << evaluation(joueur, j) << endl;
         dejouer(j);
         return true;
     
     }
     dejouer(j);
+    }
     return false;
 }
