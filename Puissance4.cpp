@@ -38,7 +38,8 @@ void Puissance4::affichage()
 
 bool Puissance4::jouer(int j, int joueur)
 {
-    if (Col[j] == 5 || j < 0 || j > 6) return false; 
+    if (Col[j] == 5 || j < 0 || j > 7) return false; 
+    
     Col[j]++;
     this->T[Col[j]][j] = joueur;  
     return true; 
@@ -46,19 +47,13 @@ bool Puissance4::jouer(int j, int joueur)
 
 void Puissance4::dejouer(int j)
 {
-    if (Col[j] == -1 || j < 0 || j > 6) return;
+    if (Col[j] == -1 || j < 0 || j > 7) return;
     this->T[Col[j]][j] = 0;
     Col[j]--;
 }
 
 int Puissance4::evaluation(int joueur, int j)
 {
-    /*cout << "vertical : " << vertical(joueur, j) << endl;
-    cout << "horizontal : " << horizontal(joueur, j) << endl;
-    cout << "diagonaledroite : " << diagonaledroite(joueur, j) << endl;
-    cout << "diagonalegauche : " << diagonalegauche(joueur, j) << endl;
-    cout << "somme : " << vertical(joueur, j) + horizontal(joueur, j) + diagonaledroite(joueur, j) + diagonalegauche(joueur, j) << endl;
-    cout << "-------------------------------------" << endl;*/
     int somme = vertical(joueur, j) + horizontal(joueur, j) + diagonaledroite(joueur, j) + diagonalegauche(joueur, j);
     if (joueur == 1) {
         return somme;
@@ -299,8 +294,6 @@ int Puissance4::jeuOrdi(int & bestMove, int niveau)
         if (!plein()){
             if (jouer(i, joueur)){
                 res = jeuHumain(arg, niveau+1);
-                /*affichage();
-                cout << "res collone " << i << " : " << res << endl;*/
                 dejouer(i);
                 if (res > val){
                     val = res;
@@ -317,7 +310,7 @@ int Puissance4::jeuHumain(int & bestMove, int niveau)
 
     int joueur = -1;
     if (plein()) return 0;
-    if (evaluation(joueur, bestMove) <= -1000) {
+    if (coupgagnant(joueur,bestMove)) {
         return -1000;
     }
     if (niveau == this->hmax){
@@ -337,8 +330,6 @@ int Puissance4::jeuHumain(int & bestMove, int niveau)
         if (!plein()){
             if(jouer(i, joueur)){
                 res = jeuOrdi(arg, niveau+1);
-                /*affichage();
-                cout << "res collone " << i << " : " << res << endl;*/
                 dejouer(i);
                 if (res < val){
                     val = res;
@@ -363,12 +354,10 @@ bool Puissance4::coupgagnant(int joueur, int j)
     
     if (jouer(j, joueur)){
         if (joueur == 1 && evaluation(joueur, j) >= 1000) {
-        //cout << "evaluation : " << evaluation(joueur, j) << endl;
         dejouer(j);
         return true;
     }
     else if (joueur == -1 && evaluation(joueur, j) <= -1000) {
-        //cout << "evaluation : " << evaluation(joueur, j) << endl;
         dejouer(j);
         return true;
     
