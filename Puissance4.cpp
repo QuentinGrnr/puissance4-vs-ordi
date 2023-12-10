@@ -275,9 +275,6 @@ int Puissance4::jeuOrdi(int & bestMove, int niveau)
     int arg = 0;
     int joueur = 1;
     if (plein()) return 0;
-    if (coupgagnant(joueur,bestMove)) {
-        return 1000;
-    }
     if (niveau == this->hmax){
         int S=0;
         for (int i = 0; i < 7; i++){
@@ -288,11 +285,17 @@ int Puissance4::jeuOrdi(int & bestMove, int niveau)
         }
         return S;
     }
-    int val = -1000;
+    int val = -10000;
     int res;
     for (int i = 0; i < 7; i++){
         if (!plein()){
-            if (jouer(i, joueur)){
+            if (jouer(i, joueur)){ // si je joue la case i, comment je sais que je gagne ?
+                dejouer(i);
+                if (coupgagnant(joueur, i)) {
+                    bestMove = i;
+                    return 1000;
+                }
+                jouer(i, joueur);
                 res = jeuHumain(arg, niveau+1);
                 dejouer(i);
                 if (res > val){
@@ -307,12 +310,9 @@ int Puissance4::jeuOrdi(int & bestMove, int niveau)
 
 int Puissance4::jeuHumain(int & bestMove, int niveau)
 {
-
     int joueur = -1;
+    int arg = 0;
     if (plein()) return 0;
-    if (coupgagnant(joueur,bestMove)) {
-        return -1000;
-    }
     if (niveau == this->hmax){
         int S=0;
         for (int i = 0; i < 7; i++){
@@ -323,13 +323,18 @@ int Puissance4::jeuHumain(int & bestMove, int niveau)
         }
         return S;
     }
-    int val = 1000;
+    int val = 10000;
     int res;
-    int arg = 0;
     for (int i = 0; i < 7; i++){
         if (!plein()){
             if(jouer(i, joueur)){
-                res = jeuOrdi(arg, niveau+1);
+                dejouer(i);
+                if (coupgagnant(joueur, i)) {
+                    bestMove = i;
+                    return -1000;
+                }
+                jouer(i, joueur);
+                res = jeuOrdi(arg, niveau);
                 dejouer(i);
                 if (res < val){
                     val = res;

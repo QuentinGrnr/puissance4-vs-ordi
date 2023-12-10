@@ -11,14 +11,11 @@ int main()
     int piece = rand() % 2;
     int difficultee;
     
-    cout << "Choisissez la difficulté de l'ordinateur (2 simple, 6 complexe, 8 très complexe, etc.)" << endl;
+    cout << "Choisissez la difficulté de l'ordinateur (2 simple, 5 complexe, 7 très complexe, etc.)" << endl;
     cout << "WARN = Plus la difficulté est élevée, plus le temps de calcul est long" << endl;
     cin >> difficultee;
     
-    if (difficultee % 2 == 1)
-    {
-        difficultee++;
-    }
+
     
     Puissance4 p(difficultee);
     int jeu = 0; // 0: la partie continue ; 1: l'ordinateur a gagné ; -1: l'humain a gagné ; 2: match nul
@@ -35,7 +32,7 @@ int main()
             else
             {
                 int bestMove = 0;
-                p.jeuOrdi(bestMove, 1);
+                p.jeuOrdi(bestMove, 0);
                 
                 if (p.coupgagnant(1, bestMove))
                 {
