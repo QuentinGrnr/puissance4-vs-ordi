@@ -11,7 +11,7 @@ int main()
     int piece = rand() % 2;
     int difficultee;
     
-    cout << "Choisissez la difficulté de l'ordinateur (2 simple, 5 complexe, 7 très complexe, etc.)" << endl;
+    cout << "Choisissez la difficulté de l'ordinateur (a partir de 5 les calculs sont trés long)" << endl;
     cout << "WARN = Plus la difficulté est élevée, plus le temps de calcul est long" << endl;
     cin >> difficultee;
     
